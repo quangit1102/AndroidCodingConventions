@@ -46,7 +46,7 @@ Tên resourecs được đặt 1 cách logic sẽ khiến project của chúng t
 Convention này đc Android Studio supports trong việc inspect code và giúp dễ dàng preview các màn hình.
 
 #### 1.2.2.1 Layout files
-Layout convention 
+* Layout convention 
 ```java
 <WHAT>_<WHERE>.xml
 ```
@@ -63,3 +63,19 @@ VD : activity_main, fragment_movie, view_menu, item_article, layout_action_bar
 | Dialog           | `ChangePasswordDialog` | `dialog_change_password.xml`  |
 | AdapterView item | ---                    | `item_person.xml`             |
 | Partial layout   | ---                    | `partial_stats_bar.xml`       |
+
+#### 1.2.2.2 Strings files
+* Strings convention .
+
+Nếu strings này sử dụng ở màn cụ thể và duy nhất, ta chỉ định (Where) cho string đó 
+```java
+WHERE>_<DESCRIPTION>
+```
+hoặc nếu strings đc sử dụng toàn app thì dùng 
+```java
+all_<DESCRIPTION>
+```
+VD : article_title, error_message, all_ok, all_close
+
+#### 1.2.2.3 Drawables files
+Drawables convention 
