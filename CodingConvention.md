@@ -199,8 +199,9 @@ void setServerPort(String value) throws ConfigurationException {
     }
 }
 ```
-* Xử lý lỗi cho phù hợp và trả lại giá trị cần thiết trong catch . Dưới đây trả về mặc định serverPort = 80 khi hàm nhảy vào catch 
+* Xử lý lỗi cho phù hợp và trả lại giá trị cần thiết trong (catch) . Dưới đây trả về mặc định serverPort = 80 khi hàm nhảy vào (catch) 
 ```java
+/** Set port. If value is not a valid number, 80 is substituted. */
 void setServerPort(String value) {
     try {
         serverPort = Integer.parseInt(value);
@@ -208,4 +209,124 @@ void setServerPort(String value) {
         serverPort = 80;  // default port for server
     }
 }
+```
+* Nắm bắt ngoại lệ và xử lý nó. Nếu giá trị nhập không đúng thì ở đây sẽ crash app
+```java
+/** Set port. If value is not a valid number, die. */
+void setServerPort(String value) {
+    try {
+        serverPort = Integer.parseInt(value);
+    } catch (NumberFormatException e) {
+        throw new RuntimeException("port " + value " is invalid, ", e);
+    }
+}
+```
+### 2.1.2 Don't catch generic exception
+Bạn không nên làm điều này:
+```java
+try {
+    someComplicatedIOFunction();        // may throw IOException
+    someComplicatedParsingFunction();   // may throw ParsingException
+    someComplicatedSecurityFunction();  // may throw SecurityException
+    // phew, made it all the way
+} catch (Exception e) {                 // I'll just catch all exceptions
+    handleError();                      // with one generic handler!
+}
+```
+Xem lý do tại sao và một số lựa chọn thay thế [here](https://source.android.com/source/code-style.html#dont-catch-generic-exception)
+
+### 2.1.3 Don't use finalizers
+
+_We don't use finalizers. There are no guarantees as to when a finalizer will be called, or even that it will be called at all. In most cases, you can do what you need from a finalizer with good exception handling. If you absolutely need it, define a `close()` method (or the like) and document exactly when that method needs to be called. See `InputStream` for an example. In this case it is appropriate but not required to print a short log message from the finalizer, as long as it is not expected to flood the logs._ - ([Android code style guidelines](https://source.android.com/source/code-style.html#dont-use-finalizers))
+
+### 2.1.4 Fully qualify imports
+* Imports đầy đủ và chi tiết
+
+This is bad: `import foo.*;`
+
+This is good: `import foo.Bar;`
+
+Đọc ở đây [here](https://source.android.com/source/code-style.html#fully-qualify-imports).
+
+## 2.2 Java style rules
+
+### 2.2.1 Fields definition and naming
+
+Fields should be defined at the __top of the file__ and they should follow the naming rules listed below.
+
+* Private, non-static field names start with __m__.
+* Private, static field names start with __s__.
+* Other fields start with a lower case letter.
+* Static final fields (constants) are ALL_CAPS_WITH_UNDERSCORES.
+
+Example:
+
+```java
+public class MyClass {
+    public static final int SOME_CONSTANT = 42;
+    public int publicField;
+    private static MyClass sSingleton;
+    int mPackagePrivate;
+    private int mPrivate;
+    protected int mProtected;
+}
+```
+
+### 2.2.3 Treat acronyms as words
+
+| Good           | Bad            |
+| -------------- | -------------- |
+| `XmlHttpRequest` | `XMLHTTPRequest` |
+| `getCustomerId`  | `getCustomerID`  |
+| `String url`     | `String URL`     |
+| `long id`        | `long ID`        |
+
+### 2.2.4 Use spaces for indentation
+
+Use __4 space__ indents for blocks:
+
+```java
+if (x == 1) {
+    x++;
+}
+```
+
+Use __8 space__ indents for line wraps:
+
+```java
+Instrument i =
+        someLongExpression(that, wouldNotFit, on, one, line);
+```
+
+### 2.2.5 Use standard brace style
+
+Braces go on the same line as the code before them.
+
+```java
+class MyClass {
+    int func() {
+        if (something) {
+            // ...
+        } else if (somethingElse) {
+            // ...
+        } else {
+            // ...
+        }
+    }
+}
+```
+
+Braces around the statements are required unless the condition and the body fit on one line.
+
+If the condition and the body fit on one line and that line is shorter than the max line length, then braces are not required, e.g.
+
+```java
+if (condition) body();
+```
+
+This is __bad__:
+
+```java
+if (condition)
+    body();  // bad!
 ```
