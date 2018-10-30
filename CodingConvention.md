@@ -7,7 +7,7 @@ Tên Class được viết giống như [UpperCamelCase](http://en.wikipedia.org
 
 For example: `SignInActivity`, `SignInFragment`, `ImageUploaderService`, `ChangePasswordDialog`.
 ### 1.2.2 Resources files
-* Tất cả tên resoures đặt theo convention sau.
+* Tất cả tên resoures phần lớn đặt theo convention sau.
 ```java
 <WHAT>_<WHERE>_<DESCRIPTION>_<SIZE> 
 ```
@@ -54,7 +54,7 @@ Convention này đc Android Studio supports trong việc inspect code và giúp 
 <What> là một trong các tên sau:  
 ```
 activity : content view trong activity fragment : content view trong fragment view : custom inflated view item : layout sử dụng trong recycler view, grid view … layout : layout sử dụng trong thẻ include.
-VD : activity_main, fragment_movie, view_menu, item_article, layout_action_bar
+VD : activity_main, fragment_movie, view_menu, item_article, layout_action_bar, layout_dialog,include_header...v.v.
 
 | Component        | Class Name             | Layout Name                   |
 | ---------------- | ---------------------- | ----------------------------- |
@@ -64,12 +64,19 @@ VD : activity_main, fragment_movie, view_menu, item_article, layout_action_bar
 | AdapterView item | ---                    | `item_person.xml`             |
 | Partial layout   | ---                    | `partial_stats_bar.xml`       |
 
-#### 1.2.2.2 Strings files
+#### 1.2.2.2 IDS of Views
+```java
+<WHAT>_<WHERE>_<DESCRIPTION>
+```
+Trong đó (What) là tên View class, (Where) là vị trí của view.
+VD: tablayout_main, image_menu_profile, text_movie_title,btn_login,layout_content
+
+#### 1.2.2.3 Strings files
 * Strings convention .
 
 Nếu strings này sử dụng ở màn cụ thể và duy nhất, ta chỉ định (Where) cho string đó 
 ```java
-WHERE>_<DESCRIPTION>
+<WHERE>_<DESCRIPTION>
 ```
 hoặc nếu strings đc sử dụng toàn app thì dùng 
 ```java
@@ -77,5 +84,75 @@ all_<DESCRIPTION>
 ```
 VD : article_title, error_message, all_ok, all_close
 
-#### 1.2.2.3 Drawables files
-Drawables convention 
+#### 1.2.2.4 Drawables files
+* Drawables convention 
+Tùy từng trường hợp và tùy theo  yêu cầu
+```java
+<What>_<DESCRIPTION>_<WHERE>_<SIZE>
+```
+VD: ic_back_home_34dp,ic_back_blue,bg_main,
+```java
+<What>_<DESCRIPTION>_all
+```
+VD: ic_back_default,avatar_default,bg_main_default,
+ 
+| Asset Type   | Prefix            |		Example               |
+|--------------| ------------------|-----------------------------|
+| Action bar   | `ab_`             | `ab_stacked.9.png`          |
+| Button       | `btn_`	            | `btn_send_pressed.9.png`    |
+| Dialog       | `dialog_`         | `dialog_top.9.png`          |
+| Divider      | `divider_`        | `divider_horizontal.9.png`  |
+| Icon         | `ic_`	            | `ic_star.png`               |
+| Menu         | `menu_	`           | `menu_submenu_bg.9.png`     |
+| Notification | `notification_`	| `notification_bg.9.png`     |
+| Tabs         | `tab_`            | `tab_pressed.9.png`         |
+ 
+Naming conventions for icons (taken from [Android iconography guidelines](http://developer.android.com/design/style/iconography.html)):
+
+| Asset Type                      | Prefix             | Example                      |
+| --------------------------------| ----------------   | ---------------------------- |
+| Icons                           | `ic_`              | `ic_star.png`                |
+| Launcher icons                  | `ic_launcher`      | `ic_launcher_calendar.png`   |
+| Menu icons and Action Bar icons | `ic_menu`          | `ic_menu_archive.png`        |
+| Status bar icons                | `ic_stat_notify`   | `ic_stat_notify_msg.png`     |
+| Tab icons                       | `ic_tab`           | `ic_tab_recent.png`          |
+| Dialog icons                    | `ic_dialog`        | `ic_dialog_info.png`         |
+
+Naming conventions for selector states:
+
+| State	       | Suffix          | Example                     |
+|--------------|-----------------|-----------------------------|
+| Normal       | `_normal`       | `btn_order_normal.9.png`    |
+| Pressed      | `_pressed`      | `btn_order_pressed.9.png`   |
+| Focused      | `_focused`      | `btn_order_focused.9.png`   |
+| Disabled     | `_disabled`     | `btn_order_disabled.9.png`  |
+| Selected     | `_selected`     | `btn_order_selected.9.png`  |
+
+#### 1.2.2.5 Dimensions 
+Một app android nên xác định một vài dimension cố định và có thể sử dụng lại. Thường ta hay sử dụng all cho (WHERE)
+```java
+<What>_all_<DESCRIPTION>_<SIZE>
+```
+hoặc có thể tùy chọn cho size cụ thể 
+```java
+<What>_<WHERE>_<DESCRIPTION>_<SIZE>
+```
+Trong đó <What> gồm có : width, height, size (nếu width == height) , margin, padding, elevation, keyline, textsize….
+ 
+VD: Muốn sử dụng chung cho toàn app các các thuộc tính về chiều cáo, chiều ngang, text  size.
+: text_size_32,height_48..v.vv.
+Hoặc kích thước cho một số view mặc định như avatar: avartar_user_default..v.v.
+
+###1.2.2.6 Colors files
+
+```java
+<What>_<WHERE>_<DESCRIPTION>
+```
+VD: text_home_title,text_error,bg_home_btn_back...vv
+Hoặc một vài màu dùng chung
+```java
+<DESCRIPTION>
+```
+VD: light_green,light_grey,red,blue,black,main_color
+
+# 2. Code guidelines
