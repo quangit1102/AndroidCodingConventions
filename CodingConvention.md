@@ -171,3 +171,41 @@ Hoặc một vài màu dùng chung
 VD: light_green,light_grey,red,blue,black,main_color
 
 # 2. Code guidelines
+
+## 2.1 Java language rules
+### 2.1.1 Don't ignore exceptions
+- Đừng  bỏ  qua ngoại lệ - Có nghĩa là try catch những thứ mà bạn nghĩ nó có thể lỗi
+```java
+void setServerPort(String value) {
+    try {
+        serverPort = Integer.parseInt(value);
+    } catch (NumberFormatException e) { }
+}
+```
+#### Bắt ngoại lệ theo thứ tự như sau.
+* Ném ngoại lệ lên cho người gọi phương thức của bạn.
+```java
+void setServerPort(String value) throws NumberFormatException {
+    serverPort = Integer.parseInt(value);
+}
+```
+* Ném ngoại lệ mới cho người gọi phương thứ của bạn 
+```java
+void setServerPort(String value) throws ConfigurationException {
+    try {
+        serverPort = Integer.parseInt(value);
+    } catch (NumberFormatException e) {
+        throw new ConfigurationException("Port " + value + " is not valid.");
+    }
+}
+```
+* Xử lý lỗi cho phù hợp và trả lại giá trị cần thiết trong catch . Dưới đây trả về mặc định serverPort = 80 khi hàm nhảy vào catch 
+```java
+void setServerPort(String value) {
+    try {
+        serverPort = Integer.parseInt(value);
+    } catch (NumberFormatException e) {
+        serverPort = 80;  // default port for server
+    }
+}
+```
