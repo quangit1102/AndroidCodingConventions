@@ -23,7 +23,7 @@ For example: `SignInActivity`, `SignInFragment`, `ImageUploaderService`, `Change
 ```java
 <SIZE> (optional) Chỉ rõ kích thước của resoure này, thường dành cho và dimensions VD : 24dp, small, big …
 ```
-* Advantages(Ưu điểm)
+* Advantages (Ưu điểm)
 1. Sắp xếp vị trí resoures theo màn hình
 ```java
 <Where> đã mô tả nơi resoure này nằm ở màn hình nào. Vì vậy ta có thể lấy các resourecs như ảnh, dimens, string ở màn hình cụ thể
@@ -33,4 +33,33 @@ For example: `SignInActivity`, `SignInFragment`, `ImageUploaderService`, `Change
 <What> mô tả tên class nằm ở element xml, sẽ dễ dàng cho ta khi gọi findViewById() 
 ```
 3. Tổ chức resoures tốt hơn
-Browser của IDE thường sắp xếp theo thứ tự alphabe, cho nên các resoures sẽ đc sắp theo theo group ứng với (What) (activity, fragment, dialog … ) và (Where) để biết resoures nằm ở màn nào.
+Browser của IDE thường sắp xếp theo thứ tự alphabe, cho nên các resoures sẽ đc sắp theo theo group ứng với (What) là (activity, fragment, dialog … ) và (Where) để biết resoures nằm ở màn nào.
+4. Autocomplete hiệu quả hơn
+```java
+Các prefix <What> và <Where> giúp việc tìm kiếm trên browser hiệu quả hơn khi chỉ cần nhập keyword các prefix này để thu gọn kết quả danh sách tìm k
+```
+5. Không còn name conflict
+Các resoures ở các màn hình khác nhau hoặc dùng từ khóa “all” còn không sẽ có 1 (Where) riêng biệt sẽ giúp tránh khỏi việc conflict name
+6. Resouces name clean hơn
+Tên resourecs được đặt 1 cách logic sẽ khiến project của chúng ta cũng clean hơn rất nhiều.
+7. Tools support
+Convention này đc Android Studio supports trong việc inspect code và giúp dễ dàng preview các màn hình.
+
+#### 1.2.2.1 Layout files
+Layout convention 
+```java
+<WHAT>_<WHERE>.xml
+```
+```java
+<What> là một trong các tên sau:  
+```
+activity : content view trong activity fragment : content view trong fragment view : custom inflated view item : layout sử dụng trong recycler view, grid view … layout : layout sử dụng trong thẻ include.
+VD : activity_main, fragment_movie, view_menu, item_article, layout_action_bar
+
+| Component        | Class Name             | Layout Name                   |
+| ---------------- | ---------------------- | ----------------------------- |
+| Activity         | `UserProfileActivity`  | `activity_user_profile.xml`   |
+| Fragment         | `SignUpFragment`       | `fragment_sign_up.xml`        |
+| Dialog           | `ChangePasswordDialog` | `dialog_change_password.xml`  |
+| AdapterView item | ---                    | `item_person.xml`             |
+| Partial layout   | ---                    | `partial_stats_bar.xml`       |
