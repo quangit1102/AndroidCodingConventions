@@ -336,3 +336,191 @@ if (condition)
 _The scope of local variables should be kept to a minimum (Effective Java Item 29). By doing so, you increase the readability and maintainability of your code and reduce the likelihood of error. Each variable should be declared in the innermost block that encloses all uses of the variable._
 
 _Local variables should be declared at the point they are first used. Nearly every local variable declaration should contain an initializer. If you don't yet have enough information to initialize a variable sensibly, you should postpone the declaration until you do._ - ([Android code style guidelines](https://source.android.com/source/code-style.html#limit-variable-scope))
+
+### 2.2.8 Order import statements
+
+If you are using an IDE such as Android Studio, you don't have to worry about this because your IDE is already obeying these rules. If not, have a look below.
+
+The ordering of import statements is:
+
+1. Android imports
+2. Imports from third parties (com, junit, net, org)
+3. java and javax
+4. Same project imports
+
+To exactly match the IDE settings, the imports should be:
+
+* Alphabetically ordered within each grouping, with capital letters before lower case letters (e.g. Z before a).
+* There should be a blank line between each major grouping (android, com, junit, net, org, java, javax).
+
+More info [here](https://source.android.com/source/code-style.html#limit-variable-scope)
+
+### 2.2.9 Logging guidelines
+
+Use the logging methods provided by the `Log` class to print out error messages or other information that may be useful for developers to identify issues:
+
+* `Log.v(String tag, String msg)` (verbose)
+* `Log.d(String tag, String msg)` (debug)
+* `Log.i(String tag, String msg)` (information)
+* `Log.w(String tag, String msg)` (warning)
+* `Log.e(String tag, String msg)` (error)
+
+As a general rule, we use the class name as tag and we define it as a `static final` field at the top of the file. For example:
+
+```java
+public class MyClass {
+    private static final String TAG = MyClass.class.getSimpleName();
+
+    public myMethod() {
+        Log.e(TAG, "My error message");
+    }
+}
+```
+
+VERBOSE and DEBUG logs __must__ be disabled on release builds. It is also recommended to disable INFORMATION, WARNING and ERROR logs but you may want to keep them enabled if you think they may be useful to identify issues on release builds. If you decide to leave them enabled, you have to make sure that they are not leaking private information such as email addresses, user ids, etc.
+
+To only show logs on debug builds:
+
+```java
+if (BuildConfig.DEBUG) Log.d(TAG, "The value of x is " + x);
+```
+
+### 2.2.10 Class member ordering
+
+There is no single correct solution for this but using a __logical__ and __consistent__ order will improve code learnability and readability. It is recommendable to use the following order:
+
+1. Constants
+2. Fields
+3. Constructors
+4. Override methods and callbacks (public or private)
+5. Public methods
+6. Private methods
+7. Inner classes or interfaces
+
+Example:
+
+```java
+public class MainActivity extends Activity {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    private String mTitle;
+    private TextView mTextViewTitle;
+
+    @Override
+    public void onCreate() {
+        ...
+    }
+
+    public void setTitle(String title) {
+    	mTitle = title;
+    }
+
+    private void setUpView() {
+        ...
+    }
+
+    static class AnInnerClass {
+
+    }
+
+}
+```
+
+If your class is extending an __Android component__ such as an Activity or a Fragment, it is a good practice to order the override methods so that they __match the component's lifecycle__. For example, if you have an Activity that implements `onCreate()`, `onDestroy()`, `onPause()` and `onResume()`, then the correct order is:
+
+```java
+public class MainActivity extends Activity {
+
+	//Order matches Activity lifecycle
+    @Override
+    public void onCreate() {}
+
+    @Override
+    public void onResume() {}
+
+    @Override
+    public void onPause() {}
+
+    @Override
+    public void onDestroy() {}
+
+}
+```
+
+### 2.2.11 Parameter ordering in methods
+
+When programming for Android, it is quite common to define methods that take a `Context`. If you are writing a method like this, then the __Context__ must be the __first__ parameter.
+
+The opposite case are __callback__ interfaces that should always be the __last__ parameter.
+
+Examples:
+
+```java
+// Context always goes first
+public User loadUser(Context context, int userId);
+
+// Callbacks always go last
+public void loadUserAsync(Context context, int userId, UserCallback callback);
+```
+
+### 2.2.13 String constants, naming, and values
+
+Many elements of the Android SDK such as `SharedPreferences`, `Bundle`, or `Intent` use a key-value pair approach so it's very likely that even for a small app you end up having to write a lot of String constants.
+
+When using one of these components, you __must__ define the keys as a `static final` fields and they should be prefixed as indicated below.
+
+| Element            | Field Name Prefix |
+| -----------------  | ----------------- |
+| SharedPreferences  | `PREF_`             |
+| Bundle             | `BUNDLE_`           |
+| Fragment Arguments | `ARGUMENT_`         |
+| Intent Extra       | `EXTRA_`            |
+| Intent Action      | `ACTION_`           |
+
+Note that the arguments of a Fragment - `Fragment.getArguments()` - are also a Bundle. However, because this is a quite common use of Bundles, we define a different prefix for them.
+
+Example:
+
+```java
+// Note the value of the field is the same as the name to avoid duplication issues
+static final String PREF_EMAIL = "PREF_EMAIL";
+static final String BUNDLE_AGE = "BUNDLE_AGE";
+static final String ARGUMENT_USER_ID = "ARGUMENT_USER_ID";
+
+// Intent-related items use full package name as value
+static final String EXTRA_SURNAME = "com.myapp.extras.EXTRA_SURNAME";
+static final String ACTION_OPEN_USER = "com.myapp.action.ACTION_OPEN_USER";
+```
+
+### 2.2.14 Arguments in Fragments and Activities
+
+When data is passed into an `Activity` or `Fragment` via an `Intent` or a `Bundle`, the keys for the different values __must__ follow the rules described in the section above.
+
+When an `Activity` or `Fragment` expects arguments, it should provide a `public static` method that facilitates the creation of the relevant `Intent` or `Fragment`.
+
+In the case of Activities the method is usually called `getStartIntent()`:
+
+```java
+public static Intent getStartIntent(Context context, User user) {
+	Intent intent = new Intent(context, ThisActivity.class);
+	intent.putParcelableExtra(EXTRA_USER, user);
+	return intent;
+}
+```
+
+For Fragments it is named `newInstance()` and handles the creation of the Fragment with the right arguments:
+
+```java
+public static UserFragment newInstance(User user) {
+	UserFragment fragment = new UserFragment();
+	Bundle args = new Bundle();
+	args.putParcelable(ARGUMENT_USER, user);
+	fragment.setArguments(args)
+	return fragment;
+}
+```
+
+__Note 1__: These methods should go at the top of the class before `onCreate()`.
+
+__Note 2__: If we provide the methods described above, the keys for extras and arguments should be `private` because there is not need for them to be exposed outside the class.
