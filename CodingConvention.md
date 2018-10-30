@@ -71,6 +71,13 @@ VD : activity_main, fragment_movie, view_menu, item_article, layout_action_bar, 
 Trong đó (What) là tên View class, (Where) là vị trí của view.
 VD: tablayout_main, image_menu_profile, text_movie_title,btn_login,layout_content
 
+| Element            | Prefix            |
+| -----------------  | ----------------- |
+| `TextView`           | `text_`             |
+| `ImageView`          | `image_`            |
+| `Button`             | `button_`           |
+| `Menu`               | `menu_`             |
+
 #### 1.2.2.3 Strings files
 * Strings convention .
 
@@ -83,6 +90,14 @@ hoặc nếu strings đc sử dụng toàn app thì dùng
 all_<DESCRIPTION>
 ```
 VD : article_title, error_message, all_ok, all_close
+
+| Prefix             | Description                           |
+| -----------------  | --------------------------------------|
+| `error_`             | An error message                      |
+| `msg_`               | A regular information message         |
+| `title_`             | A title, i.e. a dialog title          |
+| `action_`            | An action such as "Save" or "Create"  |
+
 
 #### 1.2.2.4 Drawables files
 * Drawables convention 
