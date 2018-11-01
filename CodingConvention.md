@@ -100,6 +100,7 @@ VD : article_title, error_message, all_ok, all_close
 
 
 #### 1.2.2.4 Drawables files
+
 * Drawables convention 
 Tùy từng trường hợp và tùy theo  yêu cầu
 ```java
